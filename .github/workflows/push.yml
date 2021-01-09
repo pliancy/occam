@@ -1,0 +1,48 @@
+name: Pester Tests
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  pester-tests:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        #Get Pwsh Cache
+      - name: Get Pwsh Cache Directory
+        id: pwsh-cache
+        uses: actions/cache@v2
+        with:
+          path: '~\Documents\PowerShell\Modules'
+          key: ${{ runner.os }}-PS-PSScriptAnalyzer-GitHubActions-pwsh
+        # Install Pwsh module if  not cached
+      - name: Install Modules for pwsh
+        if: steps.pwsh-cache.outputs.cache-hit != 'true'
+        shell: pwsh
+        run: |
+          Set-PSRepository PSGallery -InstallationPolicy Trusted
+          Install-Module GitHubActions, PSScriptAnalyzer -ErrorAction Stop
+
+      # https://github.com/marketplace/actions/pester-tests-report
+      - uses: zyborg/pester-tests-report@v1
+        name: Run and Create Pester Tests Report with Powershell Core
+        with:
+          report_name: pester_tests_report
+          report_title: Pester Tests Report
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Runs a single command using the runners shell
+      - name: Run Pester Tests with Standard Powershell
+        shell: powershell
+        run: |
+          Set-PSRepository PSGallery -InstallationPolicy Trusted
+          Install-Module PSScriptAnalyzer -ErrorAction Stop
+          Import-Module -name PSScriptAnalyzer
+          $results = Invoke-Pester -PassThru
+          if($results.Result.ToLower() -ne "passed"){Write-Error "Standard PowerShell Pester Test: Failed"}else {Write-Host "Standard Powershell Pester Test: Passed"}

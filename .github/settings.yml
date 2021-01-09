@@ -1,0 +1,18 @@
+# These settings are synced to GitHub by https://probot.github.io/apps/settings/
+# pliancy/.github:.github/settings.yaml
+
+repository:
+  # See https://developer.github.com/v3/repos/#edit for all available settings.
+
+  # The name of the repository. Changing this will rename the repository
+  name: occam
+
+  # A short description of the repository that will show up on GitHub
+  description: O365 Configuration Compliance Audit Manager
+
+  # A URL with more information about the repository
+  homepage: https://github.com/pliancy/occam
+
+  # A comma-separated list of topics to set on the repository
+  topics: O365, Best Practice, Analyzer, OCCAM, CSP
+  
