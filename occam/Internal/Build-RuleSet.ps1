@@ -7,7 +7,6 @@ function Build-RuleSet {
 
   $FormattedRuleSet = @()
   
-  $OutputKeys = @()
   $i = 0
   foreach($Rule in $Rules) {
     Write-Progress -Activity "Building Rule Set" -PercentComplete ($i / $Rules.count * 100) -CurrentOperation "Importing Rule $Rule"

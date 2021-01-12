@@ -27,10 +27,8 @@ The output will also be saved to a CSV with an execution timestamp.
 
 A set of pre-made best practices have been bundled with this module. They include:
 
-1. `Test-BasicAuth` - Checks to ensure that an authentication policy named "Block Basic Auth" is present
-2. `Test-DefaultAuthPolicy` - Checks that the "Block Basic Auth" policy is set as the default for all users
-3. `Test-PopImap` - Checks for any users that have POP or IMAP enabled and exports a CSV list of them
-4. `Test-UnifiedAuditLogging` - Checks that Unified Audit Logging is enabled on the tenant
-5. `Test-UserBasicAuth` - Checks for any users with Basic Authentication enabled and exports a CSV list of them
+1. `Test-BasicAuthPolicies` - Checks to ensure that authentication policies block basic authentication mechanisms
+2. `Test-PopImap` - Checks for any users that have POP or IMAP enabled and exports a CSV list of them
+3. `Test-UnifiedAuditLogging` - Checks that Unified Audit Logging is enabled on the tenant
 
 Additional rules can be added by inserting a compliant rule file into the `Rules` directory in the module. Rulesets are dynamically evaluated at run-time.

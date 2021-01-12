@@ -7,6 +7,9 @@ repository:
   # The name of the repository. Changing this will rename the repository
   name: occam
 
+  # Either `true` to make the repository private, or `false` to make it public.
+  private: false
+
   # A short description of the repository that will show up on GitHub
   description: O365 Configuration Compliance Audit Manager
 
