@@ -12,7 +12,7 @@ OCCAM is an open-source toolkit for testing Office365 tenants against a set of s
 
 Download the Main branch and place the "occam" folder into the (default) `C:\Program Files\WindowsPowerShell\Modules` folder
 
-```ps
+```ps1
 Import-Module occam
 Invoke-Occam
 ```
@@ -47,7 +47,7 @@ Rules are ran in an environment that has the [MSOnline](https://docs.microsoft.c
 
 Rules are expected to return a hashtable of key/value pairs corresponding to the test case(s) the Rule evaluates. Each value is expected to be a boolean, as Rules are meant to evaluate to a simple Pass/Fail criteria.
 
-```ps
+```ps1
 @{
   ImapDisabled = $false
   PopDisabled = $true
@@ -64,7 +64,7 @@ The `.OUTPUTS` help value is expected to contain a list of keys matching exactly
 
 The following is an example of the `Test-PopImap` Rule that is pre-packaged with OCCAM. It contains a synopsis, two outputs, and makes use of an ExchangeOnlineManagement cmdlet:
 
-```ps
+```ps1
 <#
 .SYNOPSIS
 Test that POP and IMAP are disabled on all mailbox plans
