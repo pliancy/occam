@@ -4,13 +4,23 @@
 
 ----
 
+![PowerShell Gallery Version](https://img.shields.io/powershellgallery/v/occam?color=%237f4bae) ![GitHub](https://img.shields.io/github/license/pliancy/occam)
+
 OCCAM is an open-source toolkit for testing Office365 tenants against a set of security and compliance best practices. It is built for CSPs managing multiple tenants, though a future version will allow for use without CSP membership.
+
+## Install
+
+OCCAM can be installed via the PowerShell Gallery:
+
+```ps1
+Install-Module -Name occam
+```
 
 ## Usage
 
 :warning: Currently the O365 commands this module relies on are only supported on Windows
 
-Download the Main branch and place the "occam" folder into the (default) `C:\Program Files\WindowsPowerShell\Modules` folder
+Import the module and run the `Invoke-Occam` command to begin an Occam audit.
 
 ```ps1
 Import-Module occam
