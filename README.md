@@ -32,3 +32,62 @@ A set of pre-made best practices have been bundled with this module. They includ
 3. `Test-UnifiedAuditLogging` - Checks that Unified Audit Logging is enabled on the tenant
 
 Additional rules can be added by inserting a compliant rule file into the `Rules` directory in the module. Rulesets are dynamically evaluated at run-time.
+
+## Writing Custom Rules
+
+A Rule is an arbitrary PowerShell script enriched with metadata that returns a hashtable of boolean pass/fail values. Albeit simple, Rules are flexible and powerful - anything you can write in PowerShell can be packaged as a Rule and evaluated against every Office365 tenant you manage.
+
+Rules are `.ps1` files expected to have the same name as the function contained within them. Any `.ps1` files in the `Rules` module directory are dynamically built into a RuleSet on runtime and evaluated.
+
+### Rule Execution Environment
+
+Rules are ran in an environment that has the [MSOnline](https://docs.microsoft.com/en-us/powershell/module/msonline/) and [ExchangeOnlineManagement](https://docs.microsoft.com/en-us/powershell/exchange/exchange-online-powershell-v2) modules pre-loaded and authenticated to the given tenant the Rule is being evaluated against. All cmdlets and functions in those modules are available for immediate use.
+
+### Rule Output
+
+Rules are expected to return a hashtable of key/value pairs corresponding to the test case(s) the Rule evaluates. Each value is expected to be a boolean, as Rules are meant to evaluate to a simple Pass/Fail criteria.
+
+```ps
+@{
+  ImapDisabled = $false
+  PopDisabled = $true
+}
+```
+
+ If more robust information is needed (e.g., a list of authentication policies with Basic Auth enabled), it is suggested to export that information as a CSV.
+
+### Rule Metadata
+
+OCCAM uses PowerShell's built-in Help syntax to dynamically gain metadata about each Rule. The `.SYNOPSIS` help value is presented to the user during runtime in a PowerShell progress bar. This helps provide the user with an indication of what action is being performed, which is important for longer-running Rules. Any string is supported, but it is best to keep the string short and descriptive.
+
+The `.OUTPUTS` help value is expected to contain a list of keys matching exactly the keys present in the hashtable the Rule returns. Each output key is to be separated by a new line.
+
+The following is an example of the `Test-PopImap` Rule that is pre-packaged with OCCAM. It contains a synopsis, two outputs, and makes use of an ExchangeOnlineManagement cmdlet:
+
+```ps
+<#
+.SYNOPSIS
+Test that POP and IMAP are disabled on all mailbox plans
+
+.OUTPUTS
+ImapDisabled
+PopDisabled
+#>
+function Test-PopImap {
+  param ()
+  Begin {
+    $MailboxPlans = Get-CasMailboxPlan
+  }
+  Process {
+    $output = @{
+      ImapDisabled = !(@($MailboxPlans.ImapEnabled) -contains $true)
+      PopDisabled = !(@($MailboxPlans.PopEnabled) -contains $true)
+    }
+
+    return $output
+  }
+  End {
+
+  }
+}
+```
