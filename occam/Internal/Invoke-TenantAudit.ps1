@@ -23,6 +23,9 @@ function Invoke-TenantAudit {
         return New-Object PSObject -Property $FormattedTenant
     }
 
+    $MsolProxyModulePath = Build-MsolProxy -TenantId $tenant.id
+    Import-Module $MsolProxyModulePath
+
     $i = 0
     foreach ($Rule in $RuleSet) {
         $i++
@@ -36,6 +39,9 @@ function Invoke-TenantAudit {
             Write-Warning ("Unable to run Rule {0} on Tenant {1}" -f $Rule.Name, $tenant.name)
         }
     }
+
+    Remove-Module -Name "MSOL_$($tenant.id)" -Force
+    Remove-MsolProxy -TenantId $tenant.id
 
     $i++
     Write-Progress -Activity ("Auditing {0}" -f $tenant.Name) -ParentId 1 -PercentComplete ($i / $totalSteps * 100) -CurrentOperation "Disconnecting from Exchange Online"

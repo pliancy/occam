@@ -49,6 +49,9 @@ Function Invoke-Occam {
         $formattedTenants = $formattedTenants | Select-Object -Property $Properties
         $formattedTenants | Write-PSObject -MatchMethod Exact -Column *, * -Value $false, $true -ValueForeColor Red, Green
         $formattedTenants | ConvertTo-Csv -NoTypeInformation | Out-File ('./{0}/results.csv' -f $dirname)
+
+        # Clean up tmp files
+        Remove-Item "$($env:TEMP)\occam" -Recurse -Force 
     }
     End {}
 }
