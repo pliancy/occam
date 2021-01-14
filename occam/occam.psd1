@@ -18,7 +18,7 @@
   # -- MINOR version when you add functionality in a backwards-compatible manner, and
   # -- PATCH version when you make backwards-compatible bug fixes.
   
-  ModuleVersion = '1.0.0'
+  ModuleVersion = '1.1.0'
   
   # ID used to uniquely identify this module
   GUID = '2b29a79c-8399-4ad2-b6b9-a826020da7d9'
