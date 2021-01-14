@@ -69,7 +69,8 @@
   # FormatsToProcess = @()
   
   # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-  NestedModules = 'Internal/Build-RuleSet.ps1',
+  NestedModules = 'Internal/Build-MsolProxy.ps1',
+                  'Internal/Build-RuleSet.ps1',
                   'Internal/Invoke-TenantAudit.ps1',
                   'Internal/Invoke-TenantListGUI.ps1',
                   'Internal/Write-PSObject.ps1',
