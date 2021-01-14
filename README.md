@@ -53,6 +53,27 @@ Rules are `.ps1` files expected to have the same name as the function contained 
 
 Rules are ran in an environment that has the [MSOnline](https://docs.microsoft.com/en-us/powershell/module/msonline/) and [ExchangeOnlineManagement](https://docs.microsoft.com/en-us/powershell/exchange/exchange-online-powershell-v2) modules pre-loaded and authenticated to the given tenant the Rule is being evaluated against. All cmdlets and functions in those modules are available for immediate use.
 
+There is no need for MSOnline commands to use the `-TenantId` parameter, as this value is dynamically injected with the ID of the tenant being audited. This means that you can call `Get-MsolUsers` or related functions and it will automatically return a collection scoped to the desired tenant!
+
+### Environment Variables
+
+OCCAM exposes custom environment variables that are available for use in your custom Rules. They are in the same form as the built-in PowerShell `env:` drive, and can be accessed accordingly:
+
+```ps1
+Write-Host $OCCAM:TenantName
+```
+
+The following OCCAM environment variables are avalable for use:
+
+| Variable                 | Description                                                 | Example                                                                                      |
+|--------------------------|-------------------------------------------------------------|----------------------------------------------------------------------------------------------|
+| $OCCAM:TenantName        | Office 365 Tenant Name                                      | Contoso Corp                                                                                 |
+| $OCCAM:TenantId          | Tenant ID (GUID format)                                     | `b3d628ab-3271-4cc5-bd84-ce69d0946ec6`                                                         |
+| $OCCAM:TenantDomain      | Tenant's Primary Domain                                     | contoso.onmicrosoft.com                                                                      |
+| $OCCAM:RuleName          | Name of the rule currently being evaluated                  | Test-UnifiedAuditLogging                                                                     |
+| $OCCAM:OutputDir         | Output directory scoped to current tenant and rule          | `Office365 Security Audit - 2021-01-13_15_18_06/Contoso Corp/Test-UnifiedAuditLogging` |
+| $OCCAM:AuthenticatedUser | User Principal Name of the account used for Exchange Online | steve@example.com                                                                            |
+
 ### Rule Output
 
 Rules are expected to return a hashtable of key/value pairs corresponding to the test case(s) the Rule evaluates. Each value is expected to be a boolean, as Rules are meant to evaluate to a simple Pass/Fail criteria.
