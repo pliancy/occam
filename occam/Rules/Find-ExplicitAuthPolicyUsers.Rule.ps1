@@ -21,7 +21,7 @@ function Find-ExplicitAuthPolicyUsers {
   Process {
 
     # Find users without the default authentication policy
-    $NonDefaultAuthPolicyUsers = $Users | Where-Object {$_.AuthenticationPolicy -ne ""}
+    $NonDefaultAuthPolicyUsers = $Users | Where-Object { [string]::IsNullOrEmpty($_.AuthenticationPolicy) }
 
     # Filter out only select properties
     $NonDefaultAuthPolicyUsers = $NonDefaultAuthPolicyUsers | Select-Object -Property $Properties
