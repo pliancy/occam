@@ -1,7 +1,12 @@
 Function Invoke-Occam {
+    [CmdletBinding()]
+    param (
+        [Parameter()]
+        [Switch]$NoDefaultRules = $false
+    )
     Begin {
         # Load Rules
-        $RuleSet = Build-RuleSet
+        $RuleSet = Build-RuleSet -NoDefaultRules:$NoDefaultRules
 
         # Create a folder to hold all results in, and add a timestamp for uniqueness
         $ReportPath = New-Item -Name ('Office365 Security Audit - {0}' -f (get-date -f yyyy-MM-dd_HH_mm_ss)) -ItemType "directory"
@@ -45,7 +50,10 @@ Function Invoke-Occam {
         }
         Write-Progress -Activity "Auditing Tenants" -Id 1 -PercentComplete 100
         
-        $Properties = (,"Name" + $RuleSet.OutputKeys)
+        # Strip empty values out of the array so that only valid keys are sent to the Select-Object cmdlet
+        $RuleOutputKeys = $RuleSet.OutputKeys | Where-Object { $_ }
+        # Prepend "Name" so that it shows up first
+        $Properties = (,"Name" + $RuleOutputKeys)
         $formattedTenants = $formattedTenants | Select-Object -Property $Properties
         $formattedTenants | Write-PSObject -MatchMethod Exact -Column *, * -Value $false, $true -ValueForeColor Red, Green
         $formattedTenants | ConvertTo-Csv -NoTypeInformation | Out-File ('./{0}/results.csv' -f $ReportPath)

@@ -37,17 +37,26 @@ The output will also be saved to a CSV with an execution timestamp.
 
 A set of pre-made best practices have been bundled with this module. They include:
 
-1. `Test-BasicAuthPolicies` - Checks to ensure that authentication policies block basic authentication mechanisms
-2. `Test-PopImap` - Checks for any users that have POP or IMAP enabled and exports a CSV list of them
-3. `Test-UnifiedAuditLogging` - Checks that Unified Audit Logging is enabled on the tenant
+1. `Find-NonDefaultAuthPolicyUsers` - Finds any users not using the organization's default authentication policy and (if any) exports the list as CSV
+2. `Test-BasicAuthPolicies` - Checks to ensure that authentication policies block basic authentication mechanisms
+3. `Test-PopImap` - Checks for any users that have POP or IMAP enabled and exports a CSV list of them
+4. `Test-UnifiedAuditLogging` - Checks that Unified Audit Logging is enabled on the tenant
 
-Additional rules can be added by inserting a compliant rule file into the `Rules` directory in the module. Rulesets are dynamically evaluated at run-time.
+Additional rules can be added by creating a file ending in `.Rule.ps1` in the directory from which you invoke OCCAM. Rulesets are dynamically evaluated at run-time.
+
+If you wish to ignore all default rules entirely, you can use the `-NoDefaultRules` switch:
+
+```ps1
+Invoke-Occam -NoDefaultRules
+```
 
 ## Writing Custom Rules
 
 A Rule is an arbitrary PowerShell script enriched with metadata that returns a hashtable of boolean pass/fail values. Albeit simple, Rules are flexible and powerful - anything you can write in PowerShell can be packaged as a Rule and evaluated against every Office365 tenant you manage.
 
-Rules are `.ps1` files expected to have the same name as the function contained within them. Any `.ps1` files in the `Rules` module directory are dynamically built into a RuleSet on runtime and evaluated.
+Any files ending in `.Rule.ps1` in the working directory are discovered and parsed automatically. The name of a `.Rule.ps1` file is expected to have the same name as the function contained within them (e.g., `Test-Something.Rule.ps1` is espected to have a function named `Test-Something` inside).
+
+If a name conflict is found between a custom Rule and a default Rule, the custom Rule takes precedence.
 
 ### Rule Execution Environment
 

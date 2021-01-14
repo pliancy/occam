@@ -35,8 +35,6 @@ function Invoke-TenantAudit {
     $OCCAM:TenantId = $tenant.id
     $OCCAM:TenantDomain = $tenant.Domain
     $OCCAM:AuthenticatedUser = $UPN
-
-    Write-Host "Report Path: $ReportPath"
     
     foreach ($Rule in $RuleSet) {
         # Set Rule-specific environment variables

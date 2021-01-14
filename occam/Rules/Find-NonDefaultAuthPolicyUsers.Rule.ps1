@@ -8,14 +8,13 @@ function Find-NonDefaultAuthPolicyUsers {
   param ()
   Begin {
     $DefaultPolicy = (Get-OrganizationConfig).DefaultAuthenticationPolicy
-    $Users = Get-User -ResultSize Unlimited
+    $Users = @(Get-User -ResultSize Unlimited)
 
     $Properties = @(
       "UserPrincipalName",
       "DisplayName",
       "AuthenticationPolicy",
       "AccountDisabled",
-      "OrganizationalUnit",
       "Guid",
       "SID"
     )
@@ -28,9 +27,12 @@ function Find-NonDefaultAuthPolicyUsers {
     # Filter out only select properties
     $NonDefaultAuthPolicyUsers = $NonDefaultAuthPolicyUsers | Select-Object -Property $Properties
 
-    # Create an output directory and export as CSV
-    New-Item -ItemType Directory -Force -Path $OCCAM:OutputDir | Out-Null
-    $NonDefaultAuthPolicyUsers | ConvertTo-Csv -NoTypeInformation | Out-File ('{0}/users.csv' -f $OCCAM:OutputDir) -Force
+    if ($NonDefaultAuthPolicyUsers.Count) {
+      # Create an output directory and export as CSV
+      New-Item -ItemType Directory -Force -Path $OCCAM:OutputDir | Out-Null
+      $NonDefaultAuthPolicyUsers | ConvertTo-Csv -NoTypeInformation | Out-File ('{0}/users.csv' -f $OCCAM:OutputDir) -Force
+    }
+
 
     $output = @{}
 
