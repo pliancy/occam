@@ -85,7 +85,21 @@ Rules are expected to return a hashtable of key/value pairs corresponding to the
 }
 ```
 
- If more robust information is needed (e.g., a list of authentication policies with Basic Auth enabled), it is suggested to export that information as a CSV.
+### Exporting as CSV
+
+If more robust information is needed (e.g., a list of authentication policies with Basic Auth enabled), it is suggested to export that information as a CSV. Any files that a rule generates should be created by using the `$OCCAM:OutputDir` relative path that is provided. The `$OCCAM:OutputDir` path is unique for each invocation, tenant, _and_ rule, and it follows the following format:
+
+```txt
+<directory with invocation timestamp>\<Office 365 Tenant Name>\<Rule Name>
+```
+
+Your Rule is responsible for creating the directory path using `New-Item`. The following example snippet gets a list of users and exports it as CSV. Assuming a customer name of `Contoso Corp` and a rule name of `Test-MyCustomRule`, the following code would generate a CSV file at `./Office365 Security Audit - 2021-01-13_15_18_06/Contoso Corp/Test-MyCustomRule/users.csv`.
+
+```ps1
+$Users = Get-MsolUsers
+New-Item -ItemType Directory -Force -Path $OCCAM:OutputDir | Out-Null
+$Users | ConvertTo-Csv -NoTypeInformation | Out-File ('{0}/users.csv' -f $OCCAM:OutputDir) -Force
+```
 
 ### Rule Metadata
 

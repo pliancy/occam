@@ -26,8 +26,7 @@ function Invoke-TenantAudit {
 
     # Clean up MSOnline proxy module
     $i++; Write-Progress -Activity ("Auditing {0}" -f $tenant.Name) -ParentId 1 -PercentComplete ($i / $totalSteps * 100) -CurrentOperation "Dynamically Generating MSOnline Proxy Module"
-    $MsolProxyModulePath = Build-MsolProxy -TenantId $tenant.id
-    Import-Module $MsolProxyModulePath
+    $MsolProxyModule = Build-MsolProxy -TenantId $tenant.id
 
     # Generate PS Drive
     $i++; Write-Progress -Activity ("Auditing {0}" -f $tenant.Name) -ParentId 1 -PercentComplete ($i / $totalSteps * 100) -CurrentOperation "Creating Runtime Environment Variables"
@@ -60,8 +59,7 @@ function Invoke-TenantAudit {
 
     # Clean up MSOnline proxy module
     $i++; Write-Progress -Activity ("Auditing {0}" -f $tenant.Name) -ParentId 1 -PercentComplete ($i / $totalSteps * 100) -CurrentOperation "Removing MSOnline Proxy Module"
-    Remove-Module -Name "MSOL_$($tenant.id)" -Force
-    Remove-MsolProxy -TenantId $tenant.id 
+    Remove-Module -Name $MsolProxyModule -Force
 
     # Disconnect from Exchange Online
     $i++; Write-Progress -Activity ("Auditing {0}" -f $tenant.Name) -ParentId 1 -PercentComplete ($i / $totalSteps * 100) -CurrentOperation "Disconnecting from Exchange Online"
