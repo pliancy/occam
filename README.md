@@ -37,7 +37,7 @@ The output will also be saved to a CSV with an execution timestamp.
 
 A set of pre-made best practices have been bundled with this module. They include:
 
-1. `Find-NonDefaultAuthPolicyUsers` - Finds any users not using the organization's default authentication policy and (if any) exports the list as CSV
+1. `Find-ExplicitAuthPolicyUsers` - Finds any users not using the organization's implicit authentication policy and (if any) exports the list as CSV
 2. `Test-BasicAuthPolicies` - Checks to ensure that authentication policies block basic authentication mechanisms
 3. `Test-PopImap` - Checks for any users that have POP or IMAP enabled and exports a CSV list of them
 4. `Test-UnifiedAuditLogging` - Checks that Unified Audit Logging is enabled on the tenant

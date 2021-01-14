@@ -1,13 +1,12 @@
  <#
 .SYNOPSIS
-Report users with a non-default authentication policy
+Report users assigned an explicit authentication policy
 
 .OUTPUTS
 #>
-function Find-NonDefaultAuthPolicyUsers {
+function Find-ExplicitAuthPolicyUsers {
   param ()
   Begin {
-    $DefaultPolicy = (Get-OrganizationConfig).DefaultAuthenticationPolicy
     $Users = @(Get-User -ResultSize Unlimited)
 
     $Properties = @(
@@ -22,7 +21,7 @@ function Find-NonDefaultAuthPolicyUsers {
   Process {
 
     # Find users without the default authentication policy
-    $NonDefaultAuthPolicyUsers = $Users | Where-Object {$_.AuthenticationPolicy -ne $DefaultPolicy}
+    $NonDefaultAuthPolicyUsers = $Users | Where-Object {$_.AuthenticationPolicy -ne ""}
 
     # Filter out only select properties
     $NonDefaultAuthPolicyUsers = $NonDefaultAuthPolicyUsers | Select-Object -Property $Properties
