@@ -24,10 +24,10 @@ Import the module and run the `Invoke-Occam` command to begin an Occam audit.
 
 ```ps1
 Import-Module occam
-Invoke-Occam
+Invoke-Occam -UserPrincipalName person@example.com
 ```
 
-You will be prompted to enter your CSP-level User Principal Name and go through a modern auth workflow to log in. At that point, you will be prompted to select what tenents you wish to audit. Progress bars will indicate status, and final output is similar to the following example:
+If you do not use the `-UserPrincipalName` or `-UPN` parameter, you will be prompted to enter your CSP-level User Principal Name. A modern auth workflow will be launched to authenticate with your CSP credentials. At that point, you will be prompted to select what tenents you wish to audit. Progress bars will indicate status, and final output is similar to the following example:
 
 ![Example Output Screenshot](example.png)
 

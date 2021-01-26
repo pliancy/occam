@@ -1,6 +1,10 @@
 Function Invoke-Occam {
     [CmdletBinding()]
     param (
+        [Alias("UPN")]
+        [Parameter(Mandatory = $false)]
+        [String]$UserPrincipalName = '',
+
         [Parameter()]
         [Switch]$NoDefaultRules = $false
     )
@@ -13,7 +17,10 @@ Function Invoke-Occam {
         $ReportPath = $ReportPath.Name
     }
     Process {
-        $UPN = Read-Host -Prompt "Please enter your CSP email"
+        if ([string]::IsNullOrEmpty($UserPrincipalName)) {
+            $UserPrincipalName = Read-Host -Prompt "Please enter your CSP email"
+        }
+
         try {
             Connect-MsolService
         }
@@ -21,6 +28,7 @@ Function Invoke-Occam {
             Write-Error "Failure to connect to MSOnline Service"
             exit
         }
+
         # Get all tenants and domains
         $customers = Get-MsolPartnerContract -All
         $tenants = @()
@@ -44,7 +52,7 @@ Function Invoke-Occam {
         foreach ($selectedTenant in $selectedTenants) {
             $tenant = $tenants | Where-Object {$_.Name -eq $selectedTenant}
             Write-Progress -Activity "Auditing Tenants"  -Id 1 -PercentComplete ($i / $selectedTenants.count * 100)
-            $formattedTenants += Invoke-TenantAudit -tenant $tenant -UPN $UPN -RuleSet $RuleSet -ReportPath $ReportPath
+            $formattedTenants += Invoke-TenantAudit -tenant $tenant -UPN $UserPrincipalName -RuleSet $RuleSet -ReportPath $ReportPath
             $i++
             
         }
