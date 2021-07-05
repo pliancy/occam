@@ -52,7 +52,7 @@ Invoke-Occam -NoDefaultRules
 
 ## Writing Custom Rules
 
-A Rule is an arbitrary PowerShell script enriched with metadata that returns a hashtable of boolean pass/fail values. Albeit simple, Rules are flexible and powerful - anything you can write in PowerShell can be packaged as a Rule and evaluated against every Office365 tenant you manage.
+A Rule is any PowerShell script that returns a hashtable of boolean pass/fail values. Albeit simple, Rules are flexible and powerful - anything you can write in PowerShell can be packaged as a Rule and evaluated against every Office365 tenant you manage.
 
 Any files ending in `.Rule.ps1` in the working directory are discovered and parsed automatically. The name of a `.Rule.ps1` file is expected to have the same name as the function contained within them (e.g., `Test-Something.Rule.ps1` is espected to have a function named `Test-Something` inside).
 
@@ -128,20 +128,11 @@ ImapDisabled
 PopDisabled
 #>
 function Test-PopImap {
-  param ()
-  Begin {
     $MailboxPlans = Get-CasMailboxPlan
-  }
-  Process {
     $output = @{
       ImapDisabled = !(@($MailboxPlans.ImapEnabled) -contains $true)
       PopDisabled = !(@($MailboxPlans.PopEnabled) -contains $true)
     }
-
     return $output
-  }
-  End {
-
-  }
 }
 ```
